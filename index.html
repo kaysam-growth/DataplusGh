@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftData GH - Data Bundle Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        html { scroll-behavior: smooth; }
+        
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: #fff;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1) rotate(5deg);
+            background-color: #128c7e;
+        }
+
+        input:focus {
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+        
+        .admin-glow {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-800 font-sans">
+
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- WhatsApp Float -->
+        <a href="https://wa.me/233554222103" target="_blank" class="whatsapp-float" title="Chat with support">
+            <i data-lucide="message-circle"></i>
+        </a>
+
+        <nav class="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+            <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+                <div onclick="router.navigate('home')" class="cursor-pointer flex items-center gap-2 font-black text-xl md:text-2xl text-blue-700">
+                    <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center">
+                        <i data-lucide="wifi"></i>
+                    </div>
+                    <span>SwiftData GH</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="router.navigate('track')" class="text-sm font-bold text-slate-600 hover:text-blue-600 flex items-center gap-1">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                        <span>Track Order</span>
+                    </button>
+                    <div class="text-sm font-medium text-gray-400 hidden md:block">|</div>
+                    <div id="nav-status" class="text-sm font-medium text-gray-600 hidden md:block uppercase tracking-tighter">Reliable Data Solutions</div>
+                </div>
+            </div>
+        </nav>
+
+        <main id="main-content" class="flex-grow">
+            <div class="flex flex-col items-center justify-center h-64 gap-4">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+                <p class="text-gray-500 font-medium">Booting SwiftData Engine...</p>
+            </div>
+        </main>
+
+        <footer class="bg-gray-900 text-gray-400 py-12 mt-20">
+            <div class="max-w-6xl mx-auto px-4 text-center">
+                <div class="mb-10 p-8 bg-slate-800/40 rounded-[2.5rem] border border-slate-700/50 inline-block max-w-lg shadow-xl">
+                    <h4 class="text-white font-black text-xl mb-2">Need a high-converting website?</h4>
+                    <p class="text-sm text-slate-400 mb-6">Want a simple, automated store just like this one? We build fast, secure, and reliable web apps for modern businesses.</p>
+                    <a href="https://wa.me/233554222103" target="_blank" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-full font-bold transition-all inline-block">Work with Kaysam Growth →</a>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-white font-black text-2xl">SwiftData GH</h3>
+                    <p class="text-sm max-w-md mx-auto mt-2 text-slate-500">Fast. Reliable. Automated. The preferred choice for data bundles in Ghana.</p>
+                </div>
+                
+                <div class="space-y-1 mb-8">
+                    <p class="text-xs font-black uppercase tracking-[0.2em] text-blue-500">Powered by Kaysam Growth</p>
+                    <p class="text-xs text-slate-600 font-bold">Sic Building, Koforidua</p>
+                </div>
+
+                <div class="text-[10px] border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-center gap-4 items-center uppercase tracking-widest font-black">
+                    <span>© <span id="year"></span> SwiftData GH</span>
+                    <span class="hidden md:inline text-slate-800">|</span>
+                    <button onclick="router.navigate('login')" class="text-slate-700 hover:text-white transition-colors">Internal Access</button>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Success Modal -->
+        <div id="success-modal" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
+            <div class="bg-white rounded-[2.5rem] max-w-sm w-full p-8 text-center fade-in shadow-2xl">
+                <div id="success-icon-box" class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="check-circle-2" class="w-12 h-12"></i>
+                </div>
+                <h3 id="success-title" class="text-2xl font-black text-slate-800 mb-2">Order Submitted!</h3>
+                <p class="text-slate-500 text-sm mb-6 leading-relaxed">
+                    Processing request for <span id="success-num" class="font-bold text-blue-600"></span>.
+                </p>
+                
+                <div id="success-instruction" class="bg-blue-50 p-5 rounded-3xl mb-8 border border-blue-100">
+                    <!-- Dynamic content injected here -->
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button onclick="closeSuccessModal()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all">Back to Store</button>
+                    <button onclick="goToTrackingFromSuccess()" class="text-blue-600 font-black text-sm py-2 hover:underline">Track Delivery Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp, getDoc, setDoc, where } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+        const ADMIN_PIN = "0202148015@Gh";
+        const MOMO_ACCOUNT = "0554222103";
+        const MOMO_NAME = "SAMUEL OMARI";
+        const MOMO_NETWORK = "MTN";
+        const MOMO_REF = "KAYSAM GROWTH";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let state = {
+            user: null,
+            view: 'home',
+            isAdmin: false,
+            adminTab: 'orders',
+            selectedNetwork: 'MTN',
+            selectedBundle: null,
+            paymentMethod: 'paystack',
+            recipientPhone: '',
+            recipientPhoneConfirm: '',
+            orders: [],
+            products: [],
+            settings: { paystackPublicKey: '' },
+            isLoaded: false,
+            trackingPhone: '',
+            trackedOrders: []
+        };
+
+        const router = {
+            navigate: (view) => {
+                state.view = view;
+                render();
+                window.scrollTo(0, 0);
+            }
+        };
+        window.router = router;
+
+        async function init() {
+            document.getElementById('year').innerText = new Date().getFullYear();
+            const initAuth = async () => {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            };
+
+            onAuthStateChanged(auth, async (user) => {
+                state.user = user;
+                if (user) {
+                    const settingsDoc = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'settings_doc'));
+                    if (settingsDoc.exists()) state.settings = settingsDoc.data();
+                    
+                    onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), (snap) => {
+                        state.products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        state.isLoaded = true;
+                        render();
+                    });
+
+                    if (state.isAdmin) setupAdminOrderListener();
+                }
+            });
+            await initAuth();
+        }
+
+        function render() {
+            const container = document.getElementById('main-content');
+            const navStatus = document.getElementById('nav-status');
+            
+            if (navStatus) {
+                if (state.view === 'login') {
+                    navStatus.innerHTML = '<span class="text-red-600 font-black flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> PROTECTED AREA</span>';
+                } else {
+                    navStatus.innerHTML = 'Reliable Data Solutions';
+                }
+            }
+
+            if (!state.isLoaded && state.view !== 'login') return;
+
+            switch(state.view) {
+                case 'home': container.innerHTML = renderHome(); break;
+                case 'checkout': container.innerHTML = renderCheckout(); break;
+                case 'track': container.innerHTML = renderTracking(); break;
+                case 'login': container.innerHTML = renderLogin(); break;
+                case 'admin': container.innerHTML = renderAdmin(); break;
+            }
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function renderHome() {
+            const networkProducts = state.products.filter(p => p.network === state.selectedNetwork);
+            let bundlesHtml = networkProducts.map(b => `
+                <div onclick="selectBundle('${b.id}')" class="cursor-pointer p-5 rounded-2xl border-2 transition-all flex justify-between items-center bg-white ${state.selectedBundle?.id === b.id ? 'border-blue-600 shadow-lg ring-4 ring-blue-50' : 'border-gray-100 hover:border-blue-200'}">
+                    <div>
+                        <div class="text-2xl font-black text-slate-800">${b.size}</div>
+                        <div class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${b.type || 'Standard'}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xl font-black text-blue-700">GHS ${parseFloat(b.price).toFixed(2)}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            const isValid = state.recipientPhone.length >= 10 && state.recipientPhone === state.recipientPhoneConfirm;
+
+            return `
+                <div class="max-w-4xl mx-auto px-4 py-8 fade-in">
+                    <div class="bg-blue-600 rounded-[2.5rem] p-10 text-white mb-8 shadow-2xl relative overflow-hidden">
+                        <div class="relative z-10">
+                            <span class="bg-blue-400/30 text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">SwiftData v2.1</span>
+                            <h1 class="text-4xl font-black mb-2">Buy Data Bundles</h1>
+                            <p class="text-blue-100 font-medium">Ghana's fastest automated delivery system.</p>
+                        </div>
+                        <i data-lucide="zap" class="absolute right-[-30px] bottom-[-30px] w-64 h-64 opacity-10 text-white rotate-12"></i>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 mb-10">
+                        ${['MTN', 'Telecel', 'AT'].map(net => `
+                            <button onclick="selectNetwork('${net}')" class="rounded-2xl py-5 border-2 font-black transition-all ${state.selectedNetwork === net ? 'border-blue-600 bg-blue-50 text-blue-600 shadow-md' : 'border-gray-100 bg-white text-slate-400 hover:border-slate-200'}">${net}</button>
+                        `).join('')}
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">${bundlesHtml}</div>
+
+                    ${state.selectedBundle ? `
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-xl mb-8">
+                        <h2 class="text-2xl font-black mb-6 flex items-center gap-2"><i data-lucide="user-plus" class="text-blue-600"></i> Recipient Info</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Recipient Number</label>
+                                <input type="tel" oninput="localUpdateRecipient(this.value, 'recipientPhone')" value="${state.recipientPhone}" placeholder="05XXXXXXXX" class="w-full p-5 bg-slate-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-600 font-black text-xl transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Confirm Number</label>
+                                <input type="tel" oninput="localUpdateRecipient(this.value, 'recipientPhoneConfirm')" value="${state.recipientPhoneConfirm}" placeholder="05XXXXXXXX" class="w-full p-5 bg-slate-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-600 font-black text-xl transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-8 rounded-[2.5rem] flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl">
+                        <div class="text-white">
+                            <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Payable Amount</div>
+                            <div class="text-4xl font-black text-white">GHS ${(state.selectedBundle.price * 1.02).toFixed(2)}</div>
+                        </div>
+                        <button id="checkout-btn" onclick="router.navigate('checkout')" ${!isValid ? 'disabled' : ''} class="w-full md:w-auto px-16 py-6 rounded-2xl font-black text-xl bg-blue-600 text-white hover:bg-blue-500 shadow-lg transition-all disabled:opacity-20 disabled:cursor-not-allowed">Continue to Payment</button>
+                    </div>` : ''}
+                </div>
+            `;
+        }
+
+        window.localUpdateRecipient = (val, key) => {
+            const clean = val.replace(/\D/g, '').substring(0, 10);
+            state[key] = clean;
+            const btn = document.getElementById('checkout-btn');
+            if (btn) {
+                const isValid = state.recipientPhone.length >= 10 && state.recipientPhone === state.recipientPhoneConfirm;
+                btn.disabled = !isValid;
+            }
+        };
+
+        function renderCheckout() {
+            if (!state.selectedBundle) { router.navigate('home'); return ''; }
+            const fee = state.paymentMethod === 'paystack' ? 0.02 : 0.01;
+            const total = (parseFloat(state.selectedBundle.price) * (1 + fee)).toFixed(2);
+
+            return `
+                <div class="max-w-xl mx-auto px-4 py-8 fade-in">
+                    <button onclick="router.navigate('home')" class="text-slate-400 mb-6 font-black uppercase text-[10px] tracking-widest flex items-center gap-2 hover:text-blue-600 transition-colors">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to selection
+                    </button>
+                    
+                    <div class="bg-white rounded-[2.5rem] shadow-2xl p-8 border border-slate-100 relative">
+                        <h2 class="text-3xl font-black mb-8">Secure Checkout</h2>
+                        
+                        <div class="space-y-3 mb-8">
+                            <div class="flex justify-between p-5 bg-slate-50 rounded-2xl">
+                                <span class="text-slate-400 font-black text-[10px] uppercase tracking-wider">Bundle</span>
+                                <span class="text-slate-800 font-black">${state.selectedNetwork} ${state.selectedBundle.size}</span>
+                            </div>
+                            <div class="flex justify-between p-5 bg-slate-50 rounded-2xl">
+                                <span class="text-slate-400 font-black text-[10px] uppercase tracking-wider">Recipient</span>
+                                <span class="text-slate-800 font-black">${state.recipientPhone}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em] mb-3 px-1">Payment Method</p>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="setPaymentMethod('paystack')" class="p-5 rounded-3xl border-2 flex flex-col items-center gap-2 font-black transition-all ${state.paymentMethod==='paystack'?'border-blue-600 bg-blue-50 text-blue-700 shadow-md':'border-slate-100 text-slate-400 hover:border-slate-200'}">
+                                    <i data-lucide="credit-card"></i> <span class="text-xs uppercase">Paystack (Auto)</span>
+                                </button>
+                                <button onclick="setPaymentMethod('momo')" class="p-5 rounded-3xl border-2 flex flex-col items-center gap-2 font-black transition-all ${state.paymentMethod==='momo'?'border-blue-600 bg-blue-50 text-blue-700 shadow-md':'border-slate-100 text-slate-400 hover:border-slate-200'}">
+                                    <i data-lucide="smartphone"></i> <span class="text-xs uppercase">MoMo (Manual)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="p-8 bg-blue-600 rounded-[2rem] text-white mb-8 shadow-xl">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold opacity-80 text-sm">Total Including Fee</span>
+                                <span class="text-4xl font-black text-white">GHS ${total}</span>
+                            </div>
+                        </div>
+
+                        ${state.paymentMethod === 'paystack' ? `
+                            <form onsubmit="handlePaystack(event)" class="space-y-4">
+                                <input type="email" id="cEmail" required placeholder="Enter Email for receipt" class="w-full p-5 bg-slate-50 border-2 border-transparent rounded-2xl font-black outline-none focus:bg-white focus:border-blue-600 transition-all">
+                                <button type="submit" class="w-full py-6 rounded-2xl bg-blue-600 text-white font-black text-xl hover:bg-blue-700 shadow-lg transform active:scale-95 transition-all">COMPLETE PAYMENT</button>
+                            </form>
+                        ` : `
+                            <div class="space-y-4 p-6 bg-amber-50 rounded-[2rem] border border-amber-200">
+                                <p class="text-xs font-black text-amber-800 uppercase tracking-widest text-center">Transfer Instruction</p>
+                                <div class="bg-white p-6 rounded-2xl space-y-3 text-sm border border-amber-100 shadow-sm">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400 font-bold">Number:</span>
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-black text-lg">${MOMO_ACCOUNT}</span>
+                                            <button onclick="copyToClipboard('${MOMO_ACCOUNT}')" class="p-1 text-blue-600 hover:bg-blue-50 rounded"><i data-lucide="copy" class="w-4 h-4"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between"><span>Name:</span><span class="font-black">${MOMO_NAME}</span></div>
+                                    <div class="flex justify-between"><span>Network:</span><span class="font-black">${MOMO_NETWORK}</span></div>
+                                    <div class="flex justify-between"><span>Reference:</span><span class="font-black text-blue-600">${MOMO_REF}</span></div>
+                                </div>
+                                <div class="space-y-3 pt-4">
+                                    <input id="momoSender" placeholder="Your Registered MoMo Name" class="w-full p-4 border-2 border-transparent rounded-xl text-sm font-black outline-none focus:border-amber-500">
+                                    <input id="momoTrans" placeholder="Transaction ID (from SMS)" class="w-full p-4 border-2 border-transparent rounded-xl text-sm font-black outline-none focus:border-amber-500">
+                                    <button onclick="handleManualMomo()" class="w-full py-5 bg-amber-600 text-white rounded-2xl font-black shadow-md hover:bg-amber-700 active:scale-95 transition-all uppercase tracking-widest">I HAVE SENT IT</button>
+                                </div>
+                            </div>
+                        `}
+                    </div>
+                </div>`;
+        }
+
+        function renderTracking() {
+            return `
+                <div class="max-w-2xl mx-auto px-4 py-8 fade-in">
+                    <div class="text-center mb-12">
+                        <h1 class="text-4xl font-black mb-3">Track Order</h1>
+                        <p class="text-slate-400 font-medium">Get live updates on your data bundle delivery</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl border border-slate-100 mb-10">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <input type="tel" id="trackPhoneInput" value="${state.trackingPhone}" placeholder="Phone number used (05XXXXXXXX)" class="flex-grow p-5 bg-slate-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-blue-600 font-black text-xl transition-all">
+                            <button onclick="handleTrack()" class="bg-blue-600 text-white px-10 py-5 rounded-2xl font-black hover:bg-blue-700 shadow-lg active:scale-95 transition-all">SEARCH</button>
+                        </div>
+                    </div>
+
+                    <div id="tracking-results" class="space-y-4">
+                        ${state.trackedOrders.length > 0 ? state.trackedOrders.map(o => `
+                            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-md transition-all">
+                                <div>
+                                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">${o.createdAt ? new Date(o.createdAt?.toDate()).toLocaleString() : 'Just now'}</div>
+                                    <div class="text-xl font-black text-slate-800">${o.network} ${o.bundleSize}</div>
+                                    <div class="text-sm font-bold text-blue-600 tracking-widest">${o.recipientPhone}</div>
+                                </div>
+                                <div class="px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest ${getStatusClass(o.status)}">
+                                    ${o.status.replace('_', ' ')}
+                                </div>
+                            </div>
+                        `).join('') : state.trackingPhone ? '<div class="text-center py-20 text-slate-400 font-black uppercase tracking-widest">No order records found</div>' : ''}
+                    </div>
+                </div>`;
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'delivered': return 'bg-green-100 text-green-700 ring-2 ring-green-200';
+                case 'failed': return 'bg-red-100 text-red-700 ring-2 ring-red-200';
+                case 'processing': return 'bg-blue-100 text-blue-700 ring-2 ring-blue-200';
+                case 'not_found': return 'bg-slate-100 text-slate-700 ring-2 ring-slate-200';
+                case 'pending':
+                default: return 'bg-amber-100 text-amber-700 ring-2 ring-amber-200 animate-pulse';
+            }
+        }
+
+        function renderAdmin() {
+            if (!state.isAdmin) return renderLogin();
+            const ordersToRender = state.adminTab === 'manual' ? state.orders.filter(o => o.method === 'momo') : state.orders.filter(o => o.method !== 'momo');
+
+            return `
+                <div class="min-h-screen bg-slate-50">
+                    <nav class="bg-white border-b p-4 sticky top-0 z-40 shadow-sm">
+                        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                            <span class="font-black text-xl text-blue-700">ADMIN CONTROL</span>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                <button onclick="setAdminTab('orders')" class="px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest ${state.adminTab==='orders'?'bg-blue-600 text-white shadow-lg':'bg-slate-100 text-slate-500'}">Auto</button>
+                                <button onclick="setAdminTab('manual')" class="px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest ${state.adminTab==='manual'?'bg-amber-600 text-white shadow-lg':'bg-slate-100 text-slate-500'}">MoMo</button>
+                                <button onclick="setAdminTab('products')" class="px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest ${state.adminTab==='products'?'bg-blue-600 text-white shadow-lg':'bg-slate-100 text-slate-500'}">Inventory</button>
+                                <button onclick="setAdminTab('settings')" class="px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest ${state.adminTab==='settings'?'bg-blue-600 text-white shadow-lg':'bg-slate-100 text-slate-500'}">Configs</button>
+                            </div>
+                        </div>
+                    </nav>
+                    <main class="max-w-6xl mx-auto p-6">
+                        <div class="space-y-4">
+                            ${ordersToRender.map(o => `
+                                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between gap-6 fade-in">
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="bg-blue-600 text-white px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest">${o.network}</span>
+                                            <span class="font-black text-lg">${o.bundleSize}</span>
+                                            <span class="text-xs font-bold text-slate-400">GHS ${o.price}</span>
+                                        </div>
+                                        <div class="text-3xl font-black text-slate-800 mb-3">${o.recipientPhone}</div>
+                                        ${o.method === 'momo' ? `
+                                            <div class="p-4 bg-amber-50 rounded-2xl text-[11px] space-y-1 border border-amber-100 font-bold text-amber-900">
+                                                <div>SENDER: ${o.senderName}</div>
+                                                <div>TRANS ID: ${o.transId}</div>
+                                            </div>
+                                        ` : `<div class="text-[9px] text-slate-300 font-mono uppercase">Ref: ${o.paystackRef}</div>`}
+                                        <div class="text-[9px] text-slate-300 font-mono mt-2">${o.createdAt ? new Date(o.createdAt?.toDate()).toLocaleString() : 'Just now'}</div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex flex-col gap-1">
+                                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Update Status</label>
+                                            <select onchange="updateOrderStatus('${o.id}', this.value)" class="p-4 bg-slate-50 rounded-2xl font-black text-xs outline-none border-2 border-transparent focus:border-blue-600 appearance-none min-w-[150px]">
+                                                <option value="pending" ${o.status==='pending'?'selected':''}>PENDING</option>
+                                                <option value="processing" ${o.status==='processing'?'selected':''}>PROCESSING</option>
+                                                <option value="delivered" ${o.status==='delivered'?'selected':''}>DELIVERED</option>
+                                                <option value="failed" ${o.status==='failed'?'selected':''}>FAILED</option>
+                                                <option value="not_found" ${o.status==='not_found'?'selected':''}>NOT FOUND</option>
+                                            </select>
+                                        </div>
+                                        <button onclick="deleteOrder('${o.id}')" class="mt-4 p-4 text-red-300 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-all"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${state.adminTab === 'settings' ? renderAdminSettings() : ''}
+                        ${state.adminTab === 'products' ? renderAdminProducts() : ''}
+                    </main>
+                </div>`;
+        }
+
+        function renderAdminSettings() {
+            return `
+                <div class="mt-8 bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-xl max-w-2xl mx-auto">
+                    <h3 class="font-black text-2xl mb-8 flex items-center gap-3"><i data-lucide="settings" class="text-blue-600"></i> Platform Config</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Paystack Live Secret Key</label>
+                            <input id="pk_key" value="${state.settings.paystackPublicKey||''}" placeholder="pk_live_..." class="w-full p-5 border-2 border-transparent rounded-2xl font-mono text-sm bg-slate-50 focus:bg-white focus:border-blue-600 outline-none transition-all">
+                        </div>
+                        <button onclick="saveSettings()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black shadow-lg hover:bg-blue-700 transition-all uppercase tracking-widest">Update Cloud settings</button>
+                    </div>
+                </div>`;
+        }
+
+        function renderAdminProducts() {
+            return `
+                <div class="mt-8 bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-xl">
+                    <h3 class="font-black text-2xl mb-8">Stock Management</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 pb-12 border-b">
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-2">Network</label>
+                            <select id="p_net" class="w-full p-4 border rounded-xl font-black bg-slate-50"><option>MTN</option><option>Telecel</option><option>AT</option></select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-2">Capacity</label>
+                            <input id="p_sz" placeholder="10GB" class="w-full p-4 border rounded-xl font-black bg-slate-50">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-slate-400 uppercase mb-2">Price (GHS)</label>
+                            <input id="p_pr" type="number" step="0.01" placeholder="0.00" class="w-full p-4 border rounded-xl font-black bg-slate-50">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="createBundle()" class="w-full py-4 bg-blue-600 text-white rounded-xl font-black shadow-lg">Create Product</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${state.products.map(p => `
+                            <div class="p-6 border rounded-3xl flex justify-between items-center bg-slate-50 hover:bg-white hover:shadow-md transition-all">
+                                <div>
+                                    <div class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">${p.network}</div>
+                                    <div class="font-black text-lg">${p.size}</div>
+                                    <div class="text-xs font-bold text-slate-400">GHS ${p.price}</div>
+                                </div>
+                                <button onclick="deleteProduct('${p.id}')" class="text-red-300 hover:text-red-600 p-2"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
+        }
+
+        function renderLogin() {
+            return `
+                <div class="min-h-screen flex items-center justify-center p-4 bg-slate-900">
+                    <div class="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl max-w-md w-full border-t-8 border-red-600 admin-glow">
+                        <div class="text-center mb-8">
+                            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl transform -rotate-6">
+                                <i data-lucide="shield-alert" class="w-10 h-10"></i>
+                            </div>
+                            <h2 class="text-3xl font-black text-slate-800">Admin Vault</h2>
+                            <p class="text-slate-400 text-[10px] font-bold mt-2 tracking-widest uppercase">Unauthorized Access Strictly Prohibited</p>
+                        </div>
+                        
+                        <!-- Warning Notice -->
+                        <div class="bg-red-50 p-6 rounded-2xl mb-8 border border-red-100">
+                            <div class="flex gap-3 items-start text-red-700">
+                                <i data-lucide="info" class="w-5 h-5 shrink-0 mt-0.5"></i>
+                                <div class="text-[11px] font-black leading-relaxed uppercase tracking-wider">
+                                    Notice: This panel is for authorized personnel only. Login attempts are logged and monitored. IP tracking is active for security auditing.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Secure Pin</label>
+                                <input type="password" id="admin_p" class="w-full p-5 border-2 rounded-2xl text-center text-3xl tracking-[0.6em] outline-none focus:border-red-600 bg-slate-50 transition-all font-black" placeholder="••••">
+                            </div>
+                            <button onclick="tryLogin()" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black shadow-2xl hover:bg-slate-800 transition-all tracking-widest flex items-center justify-center gap-2">
+                                <span>AUTHENTICATE</span>
+                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </button>
+                            <button onclick="router.navigate('home')" class="w-full py-2 text-slate-400 font-bold text-xs hover:text-slate-600 transition-colors uppercase tracking-widest">Exit Secure Area</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        window.selectNetwork = (n) => { state.selectedNetwork = n; state.selectedBundle = null; render(); };
+        window.selectBundle = (id) => { state.selectedBundle = state.products.find(p => p.id === id); render(); };
+        window.setPaymentMethod = (m) => { state.paymentMethod = m; render(); };
+        window.setAdminTab = (t) => { state.adminTab = t; render(); };
+        window.closeSuccessModal = () => { document.getElementById('success-modal').style.display = 'none'; router.navigate('home'); };
+        
+        window.copyToClipboard = (text) => {
+            const input = document.createElement('input');
+            input.value = text;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            const btn = event.currentTarget;
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-600"></i>';
+            if (window.lucide) window.lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = originalIcon;
+                if (window.lucide) window.lucide.createIcons();
+            }, 2000);
+        };
+
+        window.goToTrackingFromSuccess = () => {
+            const num = document.getElementById('success-num').innerText;
+            state.trackingPhone = num;
+            document.getElementById('success-modal').style.display = 'none';
+            router.navigate('track');
+            handleTrack();
+        };
+
+        window.handleTrack = () => {
+            const phone = document.getElementById('trackPhoneInput').value.trim();
+            if (!phone) return;
+            state.trackingPhone = phone;
+            
+            const q = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+            onSnapshot(q, (snap) => {
+                const allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                state.trackedOrders = allOrders
+                    .filter(o => o.recipientPhone === phone)
+                    .sort((a, b) => {
+                        const dateA = a.createdAt?.toDate() || new Date();
+                        const dateB = b.createdAt?.toDate() || new Date();
+                        return dateB - dateA;
+                    });
+                if (state.view === 'track') render();
+            }, (err) => console.error(err));
+        };
+
+        window.tryLogin = () => {
+            const pin = document.getElementById('admin_p').value;
+            if (pin === ADMIN_PIN) {
+                state.isAdmin = true;
+                router.navigate('admin');
+                setupAdminOrderListener();
+            } else { 
+                // Enhanced feedback for security deterrent
+                const input = document.getElementById('admin_p');
+                input.value = '';
+                input.className = "w-full p-5 border-2 border-red-500 rounded-2xl text-center text-3xl tracking-[0.6em] outline-none bg-red-50 transition-all font-black";
+                console.warn("Security Alert: Unauthorized access attempt detected.");
+                setTimeout(() => {
+                    input.className = "w-full p-5 border-2 rounded-2xl text-center text-3xl tracking-[0.6em] outline-none focus:border-red-600 bg-slate-50 transition-all font-black";
+                }, 1000);
+                alert("ACCESS DENIED: Unauthorized PIN detected. This attempt has been logged."); 
+            }
+        };
+
+        window.handlePaystack = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('cEmail').value;
+            const total = (parseFloat(state.selectedBundle.price) * 1.02).toFixed(2);
+            if (!state.settings.paystackPublicKey) return alert("System Error: Merchant API keys not configured.");
+            
+            const handler = PaystackPop.setup({
+                key: state.settings.paystackPublicKey.trim(),
+                email,
+                amount: Math.round(total * 100),
+                currency: "GHS",
+                callback: async (res) => {
+                    await saveOrder({
+                        method: 'paystack',
+                        paystackRef: res.reference,
+                        price: total,
+                        status: 'pending'
+                    });
+                }
+            });
+            handler.openIframe();
+        };
+
+        window.handleManualMomo = async () => {
+            const name = document.getElementById('momoSender').value;
+            const tid = document.getElementById('momoTrans').value;
+            if (!name || !tid) return alert("Required: Registered Name & Transaction ID must be provided.");
+            const total = (parseFloat(state.selectedBundle.price) * 1.01).toFixed(2);
+            await saveOrder({
+                method: 'momo',
+                senderName: name,
+                transId: tid,
+                price: total,
+                status: 'pending'
+            });
+        };
+
+        async function saveOrder(data) {
+            const recipient = state.recipientPhone;
+            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), {
+                ...data,
+                network: state.selectedNetwork,
+                bundleSize: state.selectedBundle.size,
+                recipientPhone: recipient,
+                createdAt: serverTimestamp()
+            });
+
+            const titleEl = document.getElementById('success-title');
+            const iconBoxEl = document.getElementById('success-icon-box');
+            const instructEl = document.getElementById('success-instruction');
+            const numEl = document.getElementById('success-num');
+
+            numEl.innerText = recipient;
+
+            if (data.method === 'momo') {
+                titleEl.innerText = "Order Received!";
+                titleEl.className = "text-2xl font-black text-slate-800 mb-2";
+                iconBoxEl.className = "w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6";
+                iconBoxEl.innerHTML = '<i data-lucide="clock-3" class="w-12 h-12"></i>';
+                instructEl.innerHTML = `
+                    <div class="text-amber-700 font-bold text-xs mb-1 uppercase tracking-wider">Verification Required</div>
+                    <p class="text-slate-600 text-xs font-medium">Your order has been submitted successfully. Purchase will be processed as soon as an admin approves your payment.</p>
+                `;
+            } else {
+                titleEl.innerText = "Order Submitted!";
+                titleEl.className = "text-2xl font-black text-slate-800 mb-2";
+                iconBoxEl.className = "w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6";
+                iconBoxEl.innerHTML = '<i data-lucide="check-circle-2" class="w-12 h-12"></i>';
+                instructEl.innerHTML = `
+                    <div class="flex items-center justify-center gap-2 text-blue-700 font-bold text-xs mb-1 uppercase tracking-wider">
+                        <i data-lucide="clock" class="w-4 h-4"></i>
+                        <span>Expected Delivery</span>
+                    </div>
+                    <p class="text-blue-900 font-black text-2xl">5 - 30 Mins</p>
+                `;
+            }
+
+            state.selectedBundle = null;
+            state.recipientPhone = '';
+            state.recipientPhoneConfirm = '';
+            document.getElementById('success-modal').style.display = 'flex';
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function setupAdminOrderListener() {
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), (snap) => {
+                const allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                state.orders = allOrders.sort((a, b) => {
+                    const dateA = a.createdAt?.toDate() || new Date();
+                    const dateB = b.createdAt?.toDate() || new Date();
+                    return dateB - dateA;
+                });
+                if (state.view === 'admin') render();
+            }, (err) => console.error(err));
+        }
+
+        window.updateOrderStatus = async (id, status) => { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id), { status }); };
+        window.deleteOrder = async (id) => { if(confirm("Confirm: This order record will be permanently purged.")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id)); };
+        window.deleteProduct = async (id) => { if(confirm("Confirm: Delete this product from inventory?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id)); };
+        
+        window.createBundle = async () => {
+            const size = document.getElementById('p_sz').value;
+            const price = parseFloat(document.getElementById('p_pr').value);
+            if (!size || !price) return;
+            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'products'), {
+                network: document.getElementById('p_net').value,
+                size: size,
+                price: price,
+                createdAt: serverTimestamp()
+            });
+            document.getElementById('p_sz').value = '';
+            document.getElementById('p_pr').value = '';
+        };
+
+        window.saveSettings = async () => {
+            const key = document.getElementById('pk_key').value;
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'settings_doc'), { paystackPublicKey: key });
+            state.settings.paystackPublicKey = key;
+            alert("SUCCESS: Platform API keys updated.");
+        };
+
+        init();
+    </script>
+</body>
+  </html>
