@@ -634,52 +634,38 @@
             }
         };
 
-                        window.handlePaystack = (e) => {
+                                window.handlePaystack = (e) => {
             e.preventDefault();
             const email = document.getElementById('cEmail').value;
             const total = (parseFloat(state.selectedBundle.price) * 1.02).toFixed(2);
             
-            if (!state.settings.paystackPublicKey) {
-                return alert("System Error: Merchant API keys not configured.");
+            if (!state.settings || !state.settings.paystackPublicKey) {
+                return alert("System Error: Merchant API keys not configured in Admin.");
             }
             
-            const paystack = new PaystackPop();
-            paystack.newTransaction({
-                key: state.settings.paystackPublicKey.trim(),
-                email: email,
-                amount: Math.round(total * 100),
-                currency: "GHS",
-                onSuccess: (res) => {
-                    // This creates the order in your database after payment
-                    saveOrder({
-                        method: 'paystack',
-                        paystackRef: res.reference,
-                        price: total,
-                        status: 'pending'
-                    });
-                },
-                onCancel: () => {
-                    alert("Payment cancelled.");
-                }
-            });
-        };
-
-
-            const handler = PaystackPop.setup({
-                key: state.settings.paystackPublicKey.trim(),
-                email,
-                amount: Math.round(total * 100),
-                currency: "GHS",
-                callback: async (res) => {
-                    await saveOrder({
-                        method: 'paystack',
-                        paystackRef: res.reference,
-                        price: total,
-                        status: 'pending'
-                    });
-                }
-            });
-            handler.openIframe();
+            try {
+                const paystack = new PaystackPop();
+                paystack.newTransaction({
+                    key: state.settings.paystackPublicKey.trim(),
+                    email: email,
+                    amount: Math.round(total * 100),
+                    currency: "GHS",
+                    onSuccess: (res) => {
+                        saveOrder({
+                            method: 'paystack',
+                            paystackRef: res.reference,
+                            price: total,
+                            status: 'pending'
+                        });
+                    },
+                    onCancel: () => {
+                        alert("Payment cancelled.");
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+                alert("Payment Engine Error. Please try MoMo or contact support.");
+            }
         };
 
         window.handleManualMomo = async () => {
@@ -695,6 +681,7 @@
                 status: 'pending'
             });
         };
+
 
         async function saveOrder(data) {
             const recipient = state.recipientPhone;
