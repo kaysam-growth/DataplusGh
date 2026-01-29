@@ -6,7 +6,7 @@
     <title>SwiftData GH - Data Bundle Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://js.paystack.co/v2/inline.js"></script>
     <style>
         .fade-in { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -634,22 +634,24 @@
             }
         };
 
-                window.handlePaystack = (e) => {
+                        window.handlePaystack = (e) => {
             e.preventDefault();
             const email = document.getElementById('cEmail').value;
             const total = (parseFloat(state.selectedBundle.price) * 1.02).toFixed(2);
             
-            if (!state.settings.paystackPublicKey) return alert("System Error: Merchant API keys not configured.");
+            if (!state.settings.paystackPublicKey) {
+                return alert("System Error: Merchant API keys not configured.");
+            }
             
-            // Use the new V2 PaystackPop for better mobile redirect handling
             const paystack = new PaystackPop();
-            paystack.checkout({
+            paystack.newTransaction({
                 key: state.settings.paystackPublicKey.trim(),
                 email: email,
                 amount: Math.round(total * 100),
                 currency: "GHS",
-                onSuccess: async (res) => {
-                    await saveOrder({
+                onSuccess: (res) => {
+                    // This creates the order in your database after payment
+                    saveOrder({
                         method: 'paystack',
                         paystackRef: res.reference,
                         price: total,
@@ -661,6 +663,7 @@
                 }
             });
         };
+
 
             const handler = PaystackPop.setup({
                 key: state.settings.paystackPublicKey.trim(),
