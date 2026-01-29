@@ -634,12 +634,34 @@
             }
         };
 
-        window.handlePaystack = (e) => {
+                window.handlePaystack = (e) => {
             e.preventDefault();
             const email = document.getElementById('cEmail').value;
             const total = (parseFloat(state.selectedBundle.price) * 1.02).toFixed(2);
+            
             if (!state.settings.paystackPublicKey) return alert("System Error: Merchant API keys not configured.");
             
+            // Use the new V2 PaystackPop for better mobile redirect handling
+            const paystack = new PaystackPop();
+            paystack.checkout({
+                key: state.settings.paystackPublicKey.trim(),
+                email: email,
+                amount: Math.round(total * 100),
+                currency: "GHS",
+                onSuccess: async (res) => {
+                    await saveOrder({
+                        method: 'paystack',
+                        paystackRef: res.reference,
+                        price: total,
+                        status: 'pending'
+                    });
+                },
+                onCancel: () => {
+                    alert("Payment cancelled.");
+                }
+            });
+        };
+
             const handler = PaystackPop.setup({
                 key: state.settings.paystackPublicKey.trim(),
                 email,
