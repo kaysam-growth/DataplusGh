@@ -2,153 +2,149 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SwiftData GH - Premium Data Services</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftData GH - Premium Data Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
-
+    <script src="https://js.paystack.co/v2/inline.js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         
-        /* Premium Gradients */
-        .bg-gradient-brand { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); }
-        .bg-gradient-dark { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Floating WhatsApp */
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .card-shadow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05); }
+        .btn-glow:hover { box-shadow: 0 0 20px rgba(37, 99, 235, 0.4); }
+        
         .whatsapp-float {
             position: fixed; bottom: 30px; right: 30px;
-            background: #25d366; color: white;
-            border-radius: 50%; width: 60px; height: 60px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
-            z-index: 50; transition: transform 0.2s;
+            background: #25d366; color: white; border-radius: 20px;
+            width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3); z-index: 100;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .whatsapp-float:active { transform: scale(0.9); }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .whatsapp-float:hover { transform: scale(1.1) rotate(8deg); }
+        
+        .network-tab.active { background: #1d4ed8; color: white; transform: scale(1.05); }
+        
+        input::placeholder { color: #94a3b8; font-weight: 500; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+<body class="bg-[#f8fafc] text-slate-900">
 
     <div id="app" class="min-h-screen flex flex-col">
-        
-        <div id="announcement-bar"></div>
+        <!-- Live Notification Bar -->
+        <div id="announcement-area"></div>
 
-        <nav class="glass border-b border-slate-200/60 sticky top-0 z-40">
-            <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+        <a href="https://wa.me/233554222103" target="_blank" class="whatsapp-float">
+            <i data-lucide="message-circle" class="w-8 h-8"></i>
+        </a>
+
+        <nav class="glass sticky top-0 z-40 border-b border-slate-200/50">
+            <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
                 <div onclick="router.navigate('home')" class="cursor-pointer flex items-center gap-3">
-                    <div class="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-                        <i data-lucide="zap" class="w-5 h-5 fill-current"></i>
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
+                        <i data-lucide="zap" class="text-white w-6 h-6 fill-current"></i>
                     </div>
-                    <div>
-                        <h1 class="font-extrabold text-lg leading-none tracking-tight text-slate-900">SwiftData GH</h1>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Automated System</p>
-                    </div>
+                    <span class="font-extrabold text-2xl tracking-tight text-slate-900">SwiftData<span class="text-blue-600">GH</span></span>
                 </div>
-                
-                <div class="flex items-center gap-3">
-                    <button onclick="router.navigate('track')" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all">
-                        <i data-lucide="search" class="w-5 h-5"></i>
+                <div class="flex items-center gap-6">
+                    <button onclick="router.navigate('track')" class="hidden md:flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors">
+                        <i data-lucide="package" class="w-4 h-4"></i>
+                        Track Order
                     </button>
-                    <div class="hidden md:flex h-8 w-px bg-slate-200"></div>
-                    <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full border border-green-100">
-                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                        <span class="text-xs font-bold uppercase tracking-wide">System Online</span>
-                    </div>
+                    <button onclick="router.navigate('home')" class="bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-bold btn-glow transition-all">
+                        Buy Data
+                    </button>
                 </div>
             </div>
         </nav>
 
-        <main id="main-content" class="flex-grow flex flex-col">
-            <div class="flex-grow flex flex-col items-center justify-center p-8">
+        <main id="main-content" class="flex-grow">
+            <div class="flex flex-col items-center justify-center h-96 gap-6">
                 <div class="relative">
-                    <div class="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i data-lucide="wifi" class="w-6 h-6 text-blue-600"></i>
-                    </div>
+                    <div class="w-16 h-16 border-4 border-blue-100 rounded-full"></div>
+                    <div class="w-16 h-16 border-4 border-blue-600 rounded-full border-t-transparent animate-spin absolute top-0"></div>
                 </div>
-                <p class="mt-6 text-slate-400 font-bold text-sm tracking-widest uppercase animate-pulse">Connecting to Server...</p>
+                <div class="text-center">
+                    <p class="text-xl font-extrabold text-slate-800">Booting Secure Engine</p>
+                    <p class="text-slate-400 text-sm font-medium">Authenticating with SwiftData Cloud...</p>
+                </div>
             </div>
         </main>
 
-        <footer class="bg-gradient-dark text-slate-400 py-16">
-            <div class="max-w-5xl mx-auto px-6 text-center">
-                
-                <div class="mb-12">
-                    <div class="inline-flex items-center justify-center w-12 h-12 bg-slate-800 rounded-2xl mb-6 shadow-xl ring-1 ring-slate-700">
-                        <i data-lucide="shield-check" class="w-6 h-6 text-blue-500"></i>
-                    </div>
-                    <h3 class="text-white font-bold text-2xl mb-2">Verified Merchant</h3>
-                    <p class="text-slate-500 text-sm">Official Data Reseller. Secure Payments via Paystack.</p>
-                </div>
-
-                <div class="grid md:grid-cols-3 gap-8 mb-12 border-t border-slate-800/50 pt-12">
-                    <div class="space-y-1">
-                        <p class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Location</p>
-                        <p class="text-white text-sm font-medium">Near the SIC Building Complex</p>
-                        <p class="text-slate-400 text-sm">Koforidua, Ghana</p>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Support</p>
-                        <p class="text-white text-sm font-medium flex items-center justify-center gap-2"><i data-lucide="phone" class="w-3 h-3"></i> 0532942413</p>
-                        <p class="text-slate-400 text-sm flex items-center justify-center gap-2"><i data-lucide="mail" class="w-3 h-3"></i> omarisamuel641@gmail.com</p>
-                    </div>
-                    <div class="space-y-3">
-                        <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Security</p>
-                        <div class="flex justify-center gap-3 opacity-50">
-                            <i data-lucide="lock" class="w-5 h-5"></i>
-                            <i data-lucide="credit-card" class="w-5 h-5"></i>
-                            <i data-lucide="server" class="w-5 h-5"></i>
+        <footer class="bg-white border-t border-slate-100 py-16">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+                                <i data-lucide="zap" class="text-white w-4 h-4"></i>
+                            </div>
+                            <span class="font-extrabold text-xl">SwiftData GH</span>
+                        </div>
+                        <p class="text-slate-500 leading-relaxed max-w-sm mb-6 font-medium">
+                            Providing Ghana with the most reliable, automated data bundle delivery system. High speeds, low prices, zero stress.
+                        </p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 text-sm font-bold text-slate-700">
+                                <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
+                                omarisamuel641@gmail.com
+                            </div>
+                            <div class="flex items-center gap-3 text-sm font-bold text-slate-700">
+                                <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
+                                0532942413
+                            </div>
+                            <div class="flex items-center gap-3 text-sm font-bold text-slate-700">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-blue-600"></i>
+                                Near the SIC Building Complex, Koforidua
+                            </div>
                         </div>
                     </div>
+                    <div class="bg-blue-50 rounded-[2.5rem] p-10 flex flex-col items-center text-center justify-center border border-blue-100/50">
+                        <h4 class="text-blue-900 font-extrabold text-xl mb-3">Scale Your Business</h4>
+                        <p class="text-blue-700/70 text-sm font-medium mb-8">Want an automated store like this? We build high-converting platforms.</p>
+                        <a href="https://wa.me/233554222103" target="_blank" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-extrabold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all flex items-center gap-2">
+                            Talk to Kaysam Growth <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </a>
+                    </div>
                 </div>
-
-                <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 flex flex-col md:flex-row items-center justify-center gap-6">
-                    <span>&copy; <span id="year">2024</span> SwiftData GH</span>
-                    <button onclick="router.navigate('login')" class="hover:text-white transition-colors">Admin Access</button>
+                
+                <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">© <span id="year"></span> SwiftData GH. All rights reserved.</p>
+                    <div class="flex items-center gap-8">
+                        <button onclick="router.navigate('login')" class="text-xs font-black text-slate-300 hover:text-red-500 transition-colors uppercase tracking-widest">Internal Access</button>
+                    </div>
                 </div>
             </div>
         </footer>
 
-        <a href="https://wa.me/233554222103" target="_blank" class="whatsapp-float">
-            <i data-lucide="message-circle" class="w-8 h-8 fill-current"></i>
-        </a>
-
-        <div id="success-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-            <div class="bg-white rounded-[2rem] w-full max-w-sm p-8 shadow-2xl text-center relative overflow-hidden fade-in">
-                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
-                <div class="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i data-lucide="check" class="w-10 h-10 stroke-[3]"></i>
+        <div id="success-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
+            <div class="bg-white rounded-[3rem] max-w-md w-full p-10 text-center fade-in shadow-2xl">
+                <div id="success-icon-box" class="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <i data-lucide="check" class="w-12 h-12"></i>
                 </div>
-                <h3 id="success-title" class="text-2xl font-bold text-slate-900 mb-2">Order Confirmed</h3>
-                <p id="success-msg" class="text-slate-500 text-sm mb-8">Your request is being processed.</p>
-                <button onclick="closeSuccessModal()" class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all">Continue Shopping</button>
+                <h3 id="success-title" class="text-3xl font-extrabold text-slate-900 mb-3">Done!</h3>
+                <p class="text-slate-500 font-medium mb-8">Sending bundle to <span id="success-num" class="text-blue-600 font-bold"></span></p>
+                <div id="success-instruction" class="mb-10 p-6 bg-slate-50 rounded-3xl border border-slate-100"></div>
+                <button onclick="closeSuccessModal()" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-extrabold hover:bg-slate-800 transition-all">Continue Shopping</button>
             </div>
         </div>
-
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
-        // CONFIGURATION
         const ADMIN_PIN = "0202148015@Gh";
         const MOMO_ACCOUNT = "0554222103";
         const MOMO_NAME = "SAMUEL OMARI";
         const MOMO_NETWORK = "MTN";
+        const MOMO_REF = "KAYSAM GROWTH";
 
-        // FIREBASE KEYS
         const firebaseConfig = {
             apiKey: "AIzaSyBVTQqx3fpkpUeCRO5B4N9Hb8dDxJGDIsg",
             authDomain: "swiftdata-32d80.firebaseapp.com",
@@ -159,326 +155,419 @@
             measurementId: "G-GPS00TXFLD"
         };
 
-        // INITIALIZE
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = 'swiftdata-store-v1';
+        const appId = 'swiftdata-main-app'; // Stable ID
 
-        // STATE MANAGEMENT
         let state = {
-            user: null,
-            view: 'home',
-            isAdmin: false,
-            adminTab: 'orders',
-            selectedNetwork: 'MTN',
-            selectedBundle: null,
-            paymentMethod: 'paystack',
-            recipientPhone: '',
-            recipientPhoneConfirm: '',
-            orders: [],
-            products: [],
+            user: null, view: 'home', isAdmin: false, adminTab: 'orders',
+            selectedNetwork: 'MTN', selectedBundle: null, paymentMethod: 'paystack',
+            recipientPhone: '', recipientPhoneConfirm: '',
+            orders: [], products: [], 
             settings: { paystackPublicKey: '' },
             announcement: { text: '', active: false },
-            isLoaded: false,
-            trackingPhone: '',
-            trackedOrders: []
+            isLoaded: false, trackingPhone: '', trackedOrders: []
         };
 
-        // ROUTER
-        window.router = {
+        const router = {
             navigate: (view) => {
                 state.view = view;
                 render();
                 window.scrollTo(0, 0);
             }
         };
+        window.router = router;
 
-        // INIT
         async function init() {
             document.getElementById('year').innerText = new Date().getFullYear();
             
-            // Auth Listener
             onAuthStateChanged(auth, async (user) => {
+                state.user = user;
                 if (user) {
-                    state.user = user;
+                    // Load Config
+                    const settingsDoc = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'settings_doc'));
+                    if (settingsDoc.exists()) state.settings = settingsDoc.data();
                     
-                    // Load Settings
-                    const sDoc = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'settings_doc'));
-                    if (sDoc.exists()) state.settings = sDoc.data();
-                    
-                    // Load Announcement Listener
+                    // Announcement Listener
                     onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'announcement'), (d) => {
                         if (d.exists()) state.announcement = d.data();
-                        if (state.isLoaded) renderAnnouncement();
+                        render();
                     });
 
-                    // Load Products Listener (Main Boot Trigger)
+                    // Inventory Listener
                     onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'products'), (snap) => {
                         state.products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                         state.isLoaded = true;
                         render();
-                        renderAnnouncement();
                     });
-                } else {
-                    await signInAnonymously(auth);
                 }
             });
+            await signInAnonymously(auth);
         }
 
-        // RENDER CORE
         function render() {
-            const main = document.getElementById('main-content');
+            const container = document.getElementById('main-content');
+            const announceBar = document.getElementById('announcement-area');
+            
+            // Render Announcement
+            if (state.announcement?.active && state.announcement?.text) {
+                announceBar.innerHTML = `
+                    <div class="bg-blue-600 text-white py-3 px-6 text-center text-[11px] font-black uppercase tracking-[0.2em] fade-in flex items-center justify-center gap-3">
+                        <i data-lucide="bell" class="w-4 h-4 animate-bounce"></i>
+                        <span>${state.announcement.text}</span>
+                    </div>
+                `;
+            } else {
+                announceBar.innerHTML = '';
+            }
+
             if (!state.isLoaded && state.view !== 'login') return;
 
             switch(state.view) {
-                case 'home': main.innerHTML = renderHome(); break;
-                case 'checkout': main.innerHTML = renderCheckout(); break;
-                case 'track': main.innerHTML = renderTracking(); break;
-                case 'login': main.innerHTML = renderLogin(); break;
-                case 'admin': main.innerHTML = renderAdmin(); break;
+                case 'home': container.innerHTML = renderHome(); break;
+                case 'checkout': container.innerHTML = renderCheckout(); break;
+                case 'track': container.innerHTML = renderTracking(); break;
+                case 'login': container.innerHTML = renderLogin(); break;
+                case 'admin': container.innerHTML = renderAdmin(); break;
             }
             if (window.lucide) window.lucide.createIcons();
         }
 
-        function renderAnnouncement() {
-            const bar = document.getElementById('announcement-bar');
-            if (state.announcement?.active && state.announcement?.text) {
-                bar.innerHTML = `
-                    <div class="bg-blue-600 text-white p-3 text-center text-xs font-bold uppercase tracking-widest sticky top-0 z-50 shadow-md flex justify-center items-center gap-2">
-                        <i data-lucide="megaphone" class="w-4 h-4"></i>
-                        <span>${state.announcement.text}</span>
-                    </div>
-                `;
-                if (window.lucide) window.lucide.createIcons();
-            } else {
-                bar.innerHTML = '';
-            }
-        }
-
-        // VIEW: HOME
         function renderHome() {
-            const filtered = state.products.filter(p => p.network === state.selectedNetwork);
-            
+            const bundles = state.products.filter(p => p.network === state.selectedNetwork);
+            let bundlesHtml = bundles.map(b => `
+                <div onclick="selectBundle('${b.id}')" class="group cursor-pointer p-6 rounded-[2rem] border-2 transition-all flex flex-col justify-between bg-white ${state.selectedBundle?.id === b.id ? 'border-blue-600 ring-8 ring-blue-50 shadow-xl' : 'border-slate-100 hover:border-blue-200'}">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center group-hover:bg-blue-50 transition-colors">
+                            <i data-lucide="database" class="w-5 h-5 text-slate-400 group-hover:text-blue-600"></i>
+                        </div>
+                        <div class="text-xs font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-widest">${b.type || 'Standard'}</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-extrabold text-slate-900 tracking-tight">${b.size}</div>
+                        <div class="text-xl font-extrabold text-blue-600 mt-1">GHS ${parseFloat(b.price).toFixed(2)}</div>
+                    </div>
+                </div>
+            `).join('');
+
             return `
-                <div class="max-w-5xl mx-auto px-4 py-8 w-full fade-in">
-                    <div class="bg-gradient-brand rounded-[2.5rem] p-8 md:p-12 text-white mb-10 shadow-xl relative overflow-hidden">
-                        <div class="relative z-10">
-                            <span class="inline-block bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 border border-white/10">Official Store</span>
-                            <h2 class="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight">Instant Data.<br>Unbeatable Rates.</h2>
-                            <p class="text-blue-100 font-medium max-w-md text-sm md:text-base leading-relaxed">Secure automated delivery for MTN, Telecel, and AT. Experience the fastest service in Ghana.</p>
-                        </div>
-                        <div class="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
-                        <div class="absolute bottom-0 right-10 opacity-20 transform rotate-12">
-                            <i data-lucide="wifi" class="w-48 h-48"></i>
-                        </div>
+                <div class="max-w-4xl mx-auto px-6 py-12 fade-in">
+                    <div class="text-center mb-16">
+                        <h1 class="text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">Fast. Affordable. <span class="text-blue-600">Automated.</span></h1>
+                        <p class="text-slate-500 font-medium text-lg">Top-up your data in seconds with Ghana's premier automated portal.</p>
                     </div>
 
-                    <div class="flex p-1 bg-white border border-slate-100 rounded-2xl mb-10 shadow-sm max-w-lg mx-auto">
+                    <div class="flex flex-wrap justify-center gap-4 mb-12">
                         ${['MTN', 'Telecel', 'AT'].map(net => `
-                            <button onclick="selectNetwork('${net}')" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all ${state.selectedNetwork === net ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50'}">${net}</button>
+                            <button onclick="selectNetwork('${net}')" class="px-10 py-5 rounded-2xl border-2 font-extrabold transition-all ${state.selectedNetwork === net ? 'border-blue-600 bg-blue-600 text-white shadow-xl shadow-blue-200' : 'border-slate-100 bg-white text-slate-400 hover:border-slate-300'}">${net}</button>
                         `).join('')}
                     </div>
 
-                    ${filtered.length > 0 ? `
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-                            ${filtered.map(b => `
-                                <div onclick="selectBundle('${b.id}')" class="group bg-white p-6 rounded-[1.5rem] border border-slate-100 hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 transition-all cursor-pointer relative overflow-hidden">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                            <i data-lucide="package" class="w-5 h-5"></i>
-                                        </div>
-                                        <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider group-hover:bg-blue-50 group-hover:text-blue-600">${b.network}</span>
-                                    </div>
-                                    <h3 class="text-2xl font-extrabold text-slate-800 mb-1">${b.size}</h3>
-                                    <p class="text-slate-400 text-xs font-medium mb-4">High Speed • No Expiry</p>
-                                    <div class="flex justify-between items-center border-t border-slate-50 pt-4">
-                                        <span class="text-xl font-bold text-blue-600">GHS ${parseFloat(b.price).toFixed(2)}</span>
-                                        <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                                            <i data-lucide="arrow-right" class="w-4 h-4 text-slate-400 group-hover:text-blue-600"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">${bundlesHtml || '<p class="col-span-full text-center py-12 text-slate-400 font-bold uppercase tracking-widest">No bundles available</p>'}</div>
+
+                    ${state.selectedBundle ? `
+                    <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-2xl card-shadow mb-12">
+                        <h2 class="text-2xl font-extrabold mb-8 flex items-center gap-3"><i data-lucide="smartphone" class="text-blue-600"></i> Recipient Details</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
+                                <input type="tel" oninput="updatePhone(this.value, 'recipientPhone')" value="${state.recipientPhone}" placeholder="05XXXXXXXX" class="w-full p-6 bg-slate-50 rounded-2xl outline-none focus:ring-4 focus:ring-blue-100 focus:bg-white font-extrabold text-2xl transition-all">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Confirm Number</label>
+                                <input type="tel" oninput="updatePhone(this.value, 'recipientPhoneConfirm')" value="${state.recipientPhoneConfirm}" placeholder="05XXXXXXXX" class="w-full p-6 bg-slate-50 rounded-2xl outline-none focus:ring-4 focus:ring-blue-100 focus:bg-white font-extrabold text-2xl transition-all">
+                            </div>
                         </div>
-                    ` : `
-                        <div class="text-center py-20 bg-white rounded-[2.5rem] border border-slate-100 border-dashed">
-                            <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Stock Updating...</p>
+                    </div>
+
+                    <div class="bg-slate-900 p-10 rounded-[3rem] flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl">
+                        <div>
+                            <div class="text-slate-500 font-black text-[10px] uppercase tracking-widest mb-1">Total Due (incl. fee)</div>
+                            <div class="text-5xl font-extrabold text-white">GHS ${(state.selectedBundle.price * 1.02).toFixed(2)}</div>
                         </div>
-                    `}
-                </div>
-            `;
+                        <button id="chk-btn" onclick="router.navigate('checkout')" ${state.recipientPhone.length < 10 || state.recipientPhone !== state.recipientPhoneConfirm ? 'disabled' : ''} class="w-full md:w-auto px-12 py-6 rounded-2xl font-extrabold text-xl bg-blue-600 text-white hover:bg-blue-500 btn-glow transition-all disabled:opacity-20">Secure Checkout</button>
+                    </div>` : ''}
+                </div>`;
         }
 
-        // VIEW: CHECKOUT
+        window.updatePhone = (val, key) => {
+            state[key] = val.replace(/\D/g, '').substring(0, 10);
+            const btn = document.getElementById('chk-btn');
+            if (btn) {
+                const valid = state.recipientPhone.length === 10 && state.recipientPhone === state.recipientPhoneConfirm;
+                btn.disabled = !valid;
+            }
+        };
+
         function renderCheckout() {
-            if (!state.selectedBundle) { router.navigate('home'); return ''; }
             const fee = state.paymentMethod === 'paystack' ? 0.02 : 0.01;
             const total = (parseFloat(state.selectedBundle.price) * (1 + fee)).toFixed(2);
-            const isValid = state.recipientPhone.length === 10 && state.recipientPhone === state.recipientPhoneConfirm;
 
             return `
-                <div class="max-w-xl mx-auto px-4 py-8 fade-in">
-                    <button onclick="router.navigate('home')" class="mb-6 flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors font-bold text-xs uppercase tracking-widest">
+                <div class="max-w-xl mx-auto px-6 py-12 fade-in">
+                    <button onclick="router.navigate('home')" class="mb-8 font-black text-[10px] uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors flex items-center gap-2">
                         <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
                     </button>
                     
-                    <div class="bg-white rounded-[2.5rem] shadow-xl p-6 md:p-10 border border-slate-100">
-                        <div class="flex items-center gap-4 mb-8">
-                             <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
-                                <i data-lucide="shopping-bag" class="w-7 h-7"></i>
-                            </div>
-                            <div>
-                                <h2 class="text-2xl font-extrabold text-slate-900">Checkout</h2>
-                                <p class="text-slate-500 text-sm font-medium">Complete your purchase safely</p>
-                            </div>
+                    <div class="bg-white rounded-[3rem] shadow-2xl p-10 border border-slate-100">
+                        <h2 class="text-3xl font-extrabold mb-10 tracking-tight text-center">Complete Order</h2>
+                        
+                        <div class="bg-slate-50 p-6 rounded-3xl mb-10 space-y-4">
+                            <div class="flex justify-between items-center"><span class="text-slate-400 font-bold text-xs uppercase tracking-widest">Network</span><span class="font-extrabold">${state.selectedNetwork}</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-400 font-bold text-xs uppercase tracking-widest">Bundle</span><span class="font-extrabold">${state.selectedBundle.size}</span></div>
+                            <div class="flex justify-between items-center"><span class="text-slate-400 font-bold text-xs uppercase tracking-widest">Recipient</span><span class="font-extrabold text-blue-600">${state.recipientPhone}</span></div>
                         </div>
 
-                        <div class="bg-slate-50 rounded-2xl p-6 mb-8 border border-slate-100">
-                            <div class="flex justify-between mb-2">
-                                <span class="text-slate-500 text-sm font-medium">Package</span>
-                                <span class="font-bold text-slate-900">${state.selectedNetwork} ${state.selectedBundle.size}</span>
-                            </div>
-                            <div class="flex justify-between items-center pt-4 border-t border-slate-200">
-                                <span class="text-slate-900 font-bold">Total Payable</span>
-                                <span class="text-2xl font-extrabold text-blue-600">GHS ${total}</span>
-                            </div>
-                        </div>
-
-                        <div class="space-y-4 mb-8">
+                        <div class="mb-10">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 block px-2 text-center">Select Payment Method</label>
                             <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Recipient Number</label>
-                                    <input type="tel" value="${state.recipientPhone}" oninput="updateCheckoutInput('recipientPhone', this.value)" placeholder="05XXXXXXXX" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue
--600 rounded-xl p-4 font-bold outline-none transition-all">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Confirm Number</label>
-                                    <input type="tel" value="${state.recipientPhoneConfirm}" oninput="updateCheckoutInput('recipientPhoneConfirm', this.value)" placeholder="Confirm Number" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-600 rounded-xl p-4 font-bold outline-none transition-all">
-                                </div>
+                                <button onclick="setPaymentMethod('paystack')" class="p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-3 ${state.paymentMethod==='paystack'?'border-blue-600 bg-blue-50 text-blue-700 shadow-lg':'border-slate-100 text-slate-400'}">
+                                    <i data-lucide="credit-card" class="w-8 h-8"></i><span class="text-[11px] font-black uppercase">Automated</span>
+                                </button>
+                                <button onclick="setPaymentMethod('momo')" class="p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center gap-3 ${state.paymentMethod==='momo'?'border-blue-600 bg-blue-50 text-blue-700 shadow-lg':'border-slate-100 text-slate-400'}">
+                                    <i data-lucide="smartphone" class="w-8 h-8"></i><span class="text-[11px] font-black uppercase">Manual Transfer</span>
+                                </button>
                             </div>
-                            
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Payment Method</label>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <button onclick="setPaymentMethod('paystack')" class="p-4 rounded-xl border-2 font-bold text-xs flex flex-col items-center gap-2 transition-all ${state.paymentMethod === 'paystack' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-100 text-slate-400 hover:border-slate-200'}">
-                                        <i data-lucide="credit-card" class="w-5 h-5"></i> PAYSTACK
-                                    </button>
-                                    <button onclick="setPaymentMethod('momo')" class="p-4 rounded-xl border-2 font-bold text-xs flex flex-col items-center gap-2 transition-all ${state.paymentMethod === 'momo' ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-slate-100 text-slate-400 hover:border-slate-200'}">
-                                        <i data-lucide="smartphone" class="w-5 h-5"></i> MANUAL MOMO
-                                    </button>
-                                </div>
-                            </div>
+                        </div>
+
+                        <div class="bg-blue-600 p-8 rounded-[2rem] text-white text-center mb-10 shadow-xl shadow-blue-100">
+                            <span class="text-xs font-bold opacity-70 uppercase tracking-widest">Payable Total</span>
+                            <div class="text-5xl font-extrabold mt-1 tracking-tight">GHS ${total}</div>
                         </div>
 
                         ${state.paymentMethod === 'paystack' ? `
-                            <form onsubmit="handlePaystack(event)" class="space-y-4 animate-in fade-in slide-in-from-bottom-4">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Receipt Email</label>
-                                    <input type="email" id="cEmail" required placeholder="name@email.com" class="w-full bg-slate-50 border-2 border-transparent focus:border-blue-600 rounded-xl p-4 font-bold outline-none transition-all">
-                                </div>
-                                <button type="submit" ${!isValid ? 'disabled' : ''} class="w-full py-5 bg-blue-600 text-white rounded-xl font-black text-lg shadow-lg shadow-blue-600/30 hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                                    <span>Pay GHS ${total}</span>
-                                    <i data-lucide="lock" class="w-4 h-4 opacity-70"></i>
-                                </button>
+                            <form onsubmit="handlePaystack(event)" class="space-y-6">
+                                <input type="email" id="cEmail" required placeholder="Email for receipt" class="w-full p-6 bg-slate-50 rounded-2xl font-extrabold text-lg outline-none focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all">
+                                <button type="submit" class="w-full py-6 rounded-2xl bg-slate-900 text-white font-extrabold text-xl hover:bg-black btn-glow transition-all">PAY NOW</button>
                             </form>
                         ` : `
-                            <div class="bg-amber-50 p-6 rounded-2xl border border-amber-100 space-y-4 animate-in fade-in slide-in-from-bottom-4">
-                                <div class="bg-white p-4 rounded-xl border border-amber-100/50 shadow-sm text-sm space-y-2">
-                                    <div class="flex justify-between">
-                                        <span class="text-slate-400 font-bold">MoMo Number</span>
-                                        <span class="font-black text-slate-800">${MOMO_ACCOUNT}</span>
-                                    </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-slate-400 font-bold">Account Name</span>
-                                        <span class="font-black text-slate-800">${MOMO_NAME}</span>
-                                    </div>
+                            <div class="p-8 bg-amber-50 rounded-[2rem] border border-amber-100">
+                                <div class="space-y-4 mb-8">
+                                    <div class="flex justify-between items-center text-sm"><span class="text-amber-700 font-bold">Number:</span><span class="font-black text-xl">${MOMO_ACCOUNT}</span></div>
+                                    <div class="flex justify-between items-center text-sm"><span class="text-amber-700 font-bold">Name:</span><span class="font-black">${MOMO_NAME}</span></div>
+                                    <div class="flex justify-between items-center text-sm"><span class="text-amber-700 font-bold">Ref:</span><span class="font-black text-blue-600">${MOMO_REF}</span></div>
                                 </div>
-                                <input id="momoSender" placeholder="Your MoMo Name" class="w-full p-4 border-2 border-transparent focus:border-amber-500 rounded-xl font-bold text-sm outline-none">
-                                <input id="momoTrans" placeholder="Transaction ID" class="w-full p-4 border-2 border-transparent focus:border-amber-500 rounded-xl font-bold text-sm outline-none">
-                                <button onclick="handleManualMomo()" ${!isValid ? 'disabled' : ''} class="w-full py-5 bg-amber-600 text-white rounded-xl font-black shadow-lg shadow-amber-600/20 hover:bg-amber-700 active:scale-95 transition-all disabled:opacity-50">CONFIRM TRANSFER</button>
+                                <div class="space-y-4">
+                                    <input id="mSender" placeholder="Your MoMo Name" class="w-full p-5 rounded-xl border-none outline-none font-bold text-sm">
+                                    <input id="mTrans" placeholder="Transaction ID (from SMS)" class="w-full p-5 rounded-xl border-none outline-none font-bold text-sm">
+                                    <button onclick="handleManualMomo()" class="w-full py-5 bg-amber-600 text-white rounded-2xl font-black shadow-lg">I HAVE PAID</button>
+                                </div>
                             </div>
                         `}
                     </div>
                 </div>`;
         }
 
-        // VIEW: TRACKING
+        window.handlePaystack = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('cEmail').value;
+            const total = (parseFloat(state.selectedBundle.price) * 1.02).toFixed(2);
+            
+            if (!state.settings?.paystackPublicKey) return alert("System Error: Merchant API keys not configured.");
+            
+            const paystack = new PaystackPop();
+            paystack.newTransaction({
+                key: state.settings.paystackPublicKey.trim(),
+                email: email,
+                amount: Math.round(total * 100),
+                currency: "GHS",
+                onSuccess: (res) => {
+                    saveOrder({ method: 'paystack', paystackRef: res.reference, price: total, status: 'pending' });
+                },
+                onCancel: () => alert("Payment cancelled.")
+            });
+        };
+
+        window.handleManualMomo = async () => {
+            const name = document.getElementById('mSender').value;
+            const tid = document.getElementById('mTrans').value;
+            if (!name || !tid) return alert("Required: MoMo Name and Transaction ID.");
+            const total = (parseFloat(state.selectedBundle.price) * 1.01).toFixed(2);
+            await saveOrder({ method: 'momo', senderName: name, transId: tid, price: total, status: 'pending' });
+        };
+
+        async function saveOrder(data) {
+            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), {
+                ...data,
+                network: state.selectedNetwork,
+                bundleSize: state.selectedBundle.size,
+                recipientPhone: state.recipientPhone,
+                createdAt: serverTimestamp()
+            });
+
+            document.getElementById('success-num').innerText = state.recipientPhone;
+            const inst = document.getElementById('success-instruction');
+            
+            if (data.method === 'momo') {
+                inst.innerHTML = `<p class="text-amber-600 font-bold text-xs uppercase mb-1">Under Review</p><p class="text-slate-500 text-xs font-medium leading-relaxed">Admin will verify your transfer and release the bundle within 5-15 mins.</p>`;
+            } else {
+                inst.innerHTML = `<p class="text-blue-600 font-bold text-xs uppercase mb-1">Processing</p><p class="text-slate-900 font-black text-2xl tracking-tighter">5-30 Mins Delivery</p>`;
+            }
+
+            state.selectedBundle = null;
+            state.recipientPhone = '';
+            document.getElementById('success-modal').style.display = 'flex';
+        }
+
+        window.selectNetwork = (n) => { state.selectedNetwork = n; render(); };
+        window.selectBundle = (id) => { state.selectedBundle = state.products.find(p => p.id === id); render(); };
+        window.setPaymentMethod = (m) => { state.paymentMethod = m; render(); };
+        window.closeSuccessModal = () => { document.getElementById('success-modal').style.display = 'none'; router.navigate('home'); };
+
         function renderTracking() {
             return `
-                <div class="max-w-2xl mx-auto px-4 py-8 fade-in">
-                    <div class="text-center mb-10">
-                        <h2 class="text-3xl font-extrabold text-slate-900 mb-2">Track Order</h2>
-                        <p class="text-slate-500 font-medium">Check the live status of your delivery</p>
+                <div class="max-w-2xl mx-auto px-6 py-16 fade-in">
+                    <div class="text-center mb-12">
+                        <h1 class="text-4xl font-extrabold mb-4 tracking-tight">Track Your Bundle</h1>
+                        <p class="text-slate-500 font-medium italic">Enter your phone number to see delivery status.</p>
                     </div>
-
-                    <div class="bg-white p-2 rounded-2xl shadow-lg border border-slate-100 flex gap-2 mb-8">
-                        <input type="tel" id="trackPhoneInput" value="${state.trackingPhone}" placeholder="Enter Recipient Number" class="flex-grow p-4 rounded-xl font-bold outline-none bg-transparent">
-                        <button onclick="handleTrack()" class="bg-slate-900 text-white px-6 rounded-xl font-bold hover:bg-slate-800 transition-colors">Search</button>
+                    <div class="flex gap-4 mb-16">
+                        <input type="tel" id="trackInput" placeholder="05XXXXXXXX" class="flex-grow p-6 bg-white rounded-3xl border border-slate-100 shadow-xl outline-none focus:ring-4 focus:ring-blue-100 font-extrabold text-2xl transition-all">
+                        <button onclick="handleTrackSearch()" class="px-10 bg-slate-900 text-white rounded-3xl font-extrabold hover:bg-black transition-all shadow-xl">FIND</button>
                     </div>
-
-                    <div class="space-y-4">
-                        ${state.trackedOrders.length > 0 ? state.trackedOrders.map(o => `
-                            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div id="results" class="space-y-4">
+                        ${state.trackedOrders.length ? state.trackedOrders.map(o => `
+                            <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
                                 <div>
-                                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">${o.createdAt ? new Date(o.createdAt?.toDate()).toLocaleString() : 'Just now'}</div>
-                                    <div class="font-black text-lg text-slate-800">${o.network} ${o.bundleSize}</div>
+                                    <div class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">${o.createdAt ? new Date(o.createdAt?.toDate()).toLocaleString() : 'Just now'}</div>
+                                    <div class="text-2xl font-extrabold">${o.network} ${o.bundleSize}</div>
+                                    <div class="text-sm font-bold text-blue-600">${o.recipientPhone}</div>
                                 </div>
-                                <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${getStatusClass(o.status)}">
-                                    ${o.status}
-                                </span>
+                                <div class="px-8 py-3 rounded-full font-black text-[10px] uppercase tracking-[0.2em] ${o.status==='delivered'?'bg-green-100 text-green-700':'bg-amber-100 text-amber-700'}">${o.status}</div>
                             </div>
-                        `).join('') : state.trackingPhone ? '<div class="text-center text-slate-400 font-bold py-10">No orders found for this number</div>' : ''}
+                        `).join('') : '<p class="text-center py-20 text-slate-300 font-bold uppercase tracking-widest text-sm">No recent orders found</p>'}
                     </div>
                 </div>`;
         }
 
-        // VIEW: ADMIN
+        window.handleTrackSearch = () => {
+            const phone = document.getElementById('trackInput').value;
+            if (!phone) return;
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), (snap) => {
+                state.trackedOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+                    .filter(o => o.recipientPhone === phone)
+                    .sort((a,b) => (b.createdAt?.toDate()||0) - (a.createdAt?.toDate()||0));
+                render();
+            });
+        };
+
+        function renderLogin() {
+            return `<div class="min-h-[80vh] flex items-center justify-center p-6"><div class="bg-white p-12 rounded-[3rem] shadow-2xl max-w-sm w-full border border-slate-100"><h2 class="text-3xl font-extrabold mb-8 text-center">Secure Login</h2><input type="password" id="pin" placeholder="••••" class="w-full p-6 bg-slate-50 rounded-2xl text-center text-3xl font-black mb-6 tracking-[1em] outline-none"><button onclick="adminLogin()" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-extrabold">AUTHENTICATE</button></div></div>`;
+        }
+
+        window.adminLogin = () => {
+            if (document.getElementById('pin').value === ADMIN_PIN) {
+                state.isAdmin = true;
+                router.navigate('admin');
+                onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), (snap) => {
+                    state.orders = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => (b.createdAt?.toDate()||0) - (a.createdAt?.toDate()||0));
+                    if (state.view === 'admin') render();
+                });
+            } else alert("Invalid PIN");
+        };
+
         function renderAdmin() {
             if (!state.isAdmin) return renderLogin();
-            const ordersToRender = state.adminTab === 'manual' ? state.orders.filter(o => o.method === 'momo') : state.orders.filter(o => o.method !== 'momo');
-
+            const filtered = state.adminTab === 'manual' ? state.orders.filter(o => o.method === 'momo') : state.orders.filter(o => o.method !== 'momo');
+            
             return `
-                <div class="min-h-screen bg-slate-50 pb-20">
-                    <div class="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 py-4">
-                        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                            <span class="font-black text-xl text-blue-600 flex items-center gap-2"><i data-lucide="shield" class="w-5 h-5"></i> Admin Console</span>
-                            <div class="flex gap-2 p-1 bg-slate-100 rounded-xl">
-                                ${['orders', 'manual', 'products', 'settings'].map(t => `
-                                    <button onclick="setAdminTab('${t}')" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${state.adminTab === t ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'}">${t}</button>
+                <div class="bg-slate-50 min-h-screen">
+                    <nav class="bg-white border-b sticky top-0 z-50 p-6 flex justify-between items-center">
+                        <span class="font-extrabold text-xl text-blue-600">ADMIN VAULT</span>
+                        <div class="flex gap-2">
+                            <button onclick="state.adminTab='orders';render()" class="px-5 py-2 rounded-xl text-xs font-black uppercase ${state.adminTab==='orders'?'bg-blue-600 text-white':'bg-slate-100'} tracking-widest">Auto</button>
+                            <button onclick="state.adminTab='manual';render()" class="px-5 py-2 rounded-xl text-xs font-black uppercase ${state.adminTab==='manual'?'bg-amber-600 text-white':'bg-slate-100'} tracking-widest">MoMo</button>
+                            <button onclick="state.adminTab='stock';render()" class="px-5 py-2 rounded-xl text-xs font-black uppercase ${state.adminTab==='stock'?'bg-blue-600 text-white':'bg-slate-100'} tracking-widest">Stock</button>
+                            <button onclick="state.adminTab='config';render()" class="px-5 py-2 rounded-xl text-xs font-black uppercase ${state.adminTab==='config'?'bg-blue-600 text-white':'bg-slate-100'} tracking-widest">Config</button>
+                        </div>
+                    </nav>
+                    <main class="max-w-4xl mx-auto p-6">
+                        ${state.adminTab === 'config' ? `
+                            <div class="space-y-6">
+                                <div class="bg-white p-10 rounded-[2.5rem] shadow-xl">
+                                    <h3 class="font-extrabold text-2xl mb-6 tracking-tight">Announcement Center</h3>
+                                    <input id="ann_txt" value="${state.announcement?.text||''}" placeholder="e.g. MTN is stable" class="w-full p-6 bg-slate-50 rounded-2xl mb-4 font-bold">
+                                    <div class="flex items-center gap-3 mb-6 font-bold text-xs"><input type="checkbox" id="ann_act" ${state.announcement?.active?'checked':''}> SHOW ON LIVE SITE</div>
+                                    <button onclick="saveAnn()" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black">UPDATE LIVE BAR</button>
+                                </div>
+                                <div class="bg-white p-10 rounded-[2.5rem] shadow-xl">
+                                    <h3 class="font-extrabold text-2xl mb-6 tracking-tight">Merchant API</h3>
+                                    <input id="pay_key" value="${state.settings.paystackPublicKey||''}" placeholder="pk_live_..." class="w-full p-6 bg-slate-50 rounded-2xl mb-4 font-mono text-xs">
+                                    <button onclick="saveS()" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-black">SAVE KEYS</button>
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${state.adminTab === 'stock' ? `
+                            <div class="bg-white p-10 rounded-[2.5rem] shadow-xl">
+                                <h3 class="font-extrabold text-2xl mb-8">Add New Product</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
+                                    <select id="pn" class="p-4 bg-slate-50 rounded-xl font-black"><option>MTN</option><option>Telecel</option><option>AT</option></select>
+                                    <input id="ps" placeholder="10GB" class="p-4 bg-slate-50 rounded-xl font-black">
+                                    <input id="pp" type="number" placeholder="0.00" class="p-4 bg-slate-50 rounded-xl font-black">
+                                    <button onclick="addP()" class="bg-blue-600 text-white rounded-xl font-black">ADD</button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    ${state.products.map(p => `<div class="p-5 border rounded-2xl flex justify-between items-center"><div class="font-bold">${p.network} ${p.size} - GHS ${p.price}</div><button onclick="delP('${p.id}')" class="text-red-400">Delete</button></div>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${state.adminTab === 'orders' || state.adminTab === 'manual' ? `
+                            <div class="space-y-4">
+                                ${filtered.map(o => `
+                                    <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between gap-6">
+                                        <div>
+                                            <div class="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-2">${o.createdAt ? new Date(o.createdAt?.toDate()).toLocaleString() : 'Just now'}</div>
+                                            <div class="text-4xl font-black text-slate-800 tracking-tighter">${o.recipientPhone}</div>
+                                            <div class="text-lg font-bold text-blue-600 mt-1">${o.network} ${o.bundleSize}</div>
+                                            ${o.method === 'momo' ? `<div class="mt-4 p-4 bg-amber-50 rounded-xl text-xs font-black uppercase text-amber-800">Sender: ${o.senderName} | ID: ${o.transId}</div>` : ''}
+                                        </div>
+                                        <div class="flex items-center gap-4">
+                                            <select onchange="updO('${o.id}', this.value)" class="p-4 bg-slate-50 rounded-2xl font-black text-xs">
+                                                <option value="pending" ${o.status==='pending'?'selected':''}>PENDING</option>
+                                                <option value="delivered" ${o.status==='delivered'?'selected':''}>DELIVERED</option>
+                                                <option value="failed" ${o.status==='failed'?'selected':''}>FAILED</option>
+                                            </select>
+                                            <button onclick="delO('${o.id}')" class="text-red-300">Delete</button>
+                                        </div>
+                                    </div>
                                 `).join('')}
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="max-w-6xl mx-auto p-4 md:p-8">
-                        ${state.adminTab === 'settings' ? renderAdminSettings() : 
-                          state.adminTab === 'products' ? renderAdminProducts() : 
-                          renderOrderList(ordersToRender)}
-                    </div>
+                        ` : ''}
+                    </main>
                 </div>`;
         }
 
-        function renderOrderList(orders) {
-            return `
-                <div class="grid gap-4">
-                    ${orders.map(o => `
-                        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between gap-6 hover:shadow-md transition-all">
-                            <div>
-                                <div class="flex items-center gap-3 mb-2">
-                                    <span class="px-2 py-1 rounded bg-blue-50 text-blue-700 text-[10px] font-black uppercase">${o.network}</span>
-                                    <span class="font-black text-lg text-slate-800">${o.bundleSize}</span>
-                                    <span class="text-slate-400 text-xs font-bold">GHS ${o.price}</span>
-                                </div>
-                                <div class="text-2xl font-black text-slate-900 mb-2">${o.recipientPhone}</div>
-                                ${o.method === 'momo' ? `
-                                    <div class="text-xs bg-amber-50 text-amber-800 p-2 rounded-lg font-mono border border-amber-100 inline-block">
-                                        <b>${o.senderName}</b> • ID: ${o.transId}
-                                    </div>
-                                ` : ''}
-                                <div class="text-[10px] text-slate-400 font-bold mt-2 uppercase tracking-wider">${o.createdAt ? new Date(o.createdAt?.toDate()).toLocaleString() : 'Just now'}</div>
-                            </div>
-                            
-                            <div class="flex flex-col gap-3 min-w-[180px]">
-                                <select onchange="updateOrderStatus('${o.id}', this.value)" class="w-full p-3 bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-xl text-xs font-bold outline-none">
-                                    <option value="pending" ${o.status==='pending'?'selected':''}>
+        window.saveAnn = async () => {
+            const text = document.getElementById('ann_txt').value;
+            const active = document.getElementById('ann_act').checked;
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'announcement'), { text, active });
+            alert("Live!");
+        };
+
+        window.saveS = async () => {
+            const key = document.getElementById('pay_key').value;
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'config', 'settings_doc'), { paystackPublicKey: key });
+            alert("Saved!");
+        };
+
+        window.addP = async () => {
+            const size = document.getElementById('ps').value;
+            const price = document.getElementById('pp').value;
+            if(!size || !price) return;
+            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'products'), { network: document.getElementById('pn').value, size, price, createdAt: serverTimestamp() });
+            document.getElementById('ps').value = ''; document.getElementById('pp').value = '';
+        };
+
+        window.updO = async (id, status) => { await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id), { status }); };
+        window.delO = async (id) => { if(confirm("Delete order?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id)); };
+        window.delP = async (id) => { if(confirm("Delete product?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id)); };
+
+        init();
+    </script>
+</body>
+</html>
+
+
